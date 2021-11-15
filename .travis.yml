@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t cadellteng/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true cadellteng/react-test npm test
+
+after_success:
+  - docker build -t cadellteng/multi-client ./client
+  - docker build -t cadellteng/multi-nginx ./nginx
+  - docker build -t cadellteng/multi-server ./server
+  - docker build -t cadellteng/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take these images and push them to docker hub
+  - docker push cadellteng/multi-client
+  - docker push cadellteng/multi-nginx
+  - docker push cadellteng/multi-server
+  - docker push cadellteng/multi-worker
