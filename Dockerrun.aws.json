@@ -1,0 +1,36 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "client",
+            "image": "cadellteng/multi-client",
+            "hostname": "client",
+            "essentials": false
+        },
+        {
+            "name": "server",
+            "image": "cadellteng/multi-server",
+            "hostname": "api",
+            "essentials": false
+        },
+        {
+            "name": "worker",
+            "image": "cadellteng/multi-worker",
+            "hostname": "worker",
+            "essentials": false
+        },
+        {
+            "name": "nginx",
+            "image": "cadellteng/multi-nginx",
+            "hostname": "nginx",
+            "essentials": true,
+            "portMappings": [
+                { 
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": ["client", "server"]
+        }
+    ]
+}
